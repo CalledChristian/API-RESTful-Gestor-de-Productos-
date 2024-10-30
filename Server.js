@@ -36,7 +36,7 @@ conn.connect((err) => {
 
 //Definimos la Ruta Base para la API RESTful - Gestor de Productos
 //--> app.use("/rutaBase", router);
-app.use("/api/productos" , router );
+app.use("/api/productos " , router );
 
 /*Lista de Codigos HTTP
 * 200 OK (POR DEFECTO)
