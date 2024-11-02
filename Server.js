@@ -79,7 +79,7 @@ router.get("/idProducto/:id", (req,res)=>{
     let parametros = [idProducto];
 
     //isNaN() --> metodo "is not a number", verifica si no es un numero
-    if(isNaN(idProducto)){
+    if(!isNaN(idProducto)){
         //Number.isInteger() --> verifica si el numero es entero
         //Number(str) --> convierte un string a numero
         if(!Number.isInteger(Number(idProducto))){
@@ -326,10 +326,43 @@ router.get("/consulta", function(req,res){
 
     let parametros = [categoria,marca];
 
-    conn.query(sql,parametros,(err,results)=>{
+    if(categoria != undefined && marca != undefined) {
+        if (categoria != "" && marca != "") {
+            conn.query(sql,parametros,(err,results)=>{
+                if (err) {
+                    res.status(500).json({
+                        "msg": "ocurrió un error en el servidor",
+                        "status": 500
+                    });
+                } else if (results.length == 0) {
+                    res.status(404).json({
+                        "msg": "No se encontran productos",
+                        "status": 404
+                    });
+                } else {
+                    res.json({
+                        "msg": "productos encontrados",
+                        "productos": results
+                    });
+                }
+            });
+        } else {
+            res.status(400).json({
+                "msg":"los parametros no deben ser vacios para la consulta",
+                "status":400
+            });
+        }
+    }else{
+        res.status(400).json({
+            "msg":"debe enviar los 2 parametros para la consulta de productos",
+            "status":400
+        });
+    }
+
+    /*conn.query(sql,parametros,(err,results)=>{
         if(err) throw err;
         res.json(results);
-    });
+    });*/
 });
 
 //SubRuta para Crear un Producto
