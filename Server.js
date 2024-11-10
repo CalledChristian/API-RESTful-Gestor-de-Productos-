@@ -17,22 +17,49 @@ app.listen(3000, ()=>{
    console.log("Servidor corriendo en el puerto 3000")
 });
 
-//Definimos la conexión de base de datos MySQL:
-const conn = mysql.createConnection({
+//Definimos los parametros de conexión a la base de datos MySQL:
+const dbParams = {
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     port: 3306
-});
+};
 
-conn.connect((err) => {
-    if (err) {
-        console.error('Error al conectar a la base de datos:', err);
-        return;
-    }
-    console.log("Conexión exitosa a base de datos");
-});
+//variable de conexión
+let conn;
+
+// Función para crear la conexión con la base de datos
+function connectToDatabase() {
+    conn = mysql.createConnection(dbParams);
+
+    //Iniciamos la conexión
+    conn.connect((err) => {
+        if (err) {
+            console.error("Error al conectar a la base de datos:", err);
+            // Intentamos reconectar después de 2 segundos
+            setTimeout(connectToDatabase, 2000);
+        } else {
+            console.log("Conexión exitosa a la base de datos");
+        }
+    });
+
+    // Manejo de errores de conexión
+    conn.on("error", (err) => {
+        console.error('Error en la conexión:', err);
+        if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+            // Reconectamos automáticamente en caso de desconexión
+            console.log('Intentando reconectar a la base de datos...');
+            connectToDatabase();
+        } else {
+            throw err;
+        }
+    });
+}
+
+// Llamamos a la función de conexión
+connectToDatabase();
+
 
 //Definimos la Ruta Base para la API RESTful - Gestor de Productos
 //--> app.use("/rutaBase", router);
