@@ -13,8 +13,8 @@ require('dotenv').config();
 
 
 //Definimos el puerto de escucha para el servidor de API RESTful:
-app.listen(3000, ()=>{
-   console.log("Servidor corriendo en el puerto 3000")
+app.listen(5000, ()=>{
+   console.log("Servidor corriendo en el puerto 5000")
 });
 
 //Definimos los parametros de conexión a la base de datos MySQL:
@@ -23,7 +23,7 @@ const dbParams = {
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    port: process.env.PORT
+    port: process.env.DB_PORT
 };
 
 //variable de conexión
