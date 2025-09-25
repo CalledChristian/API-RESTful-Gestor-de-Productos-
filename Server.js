@@ -23,7 +23,7 @@ const dbParams = {
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    port: 3306
+    port: process.env.PORT
 };
 
 //variable de conexión
@@ -48,7 +48,7 @@ function connectToDatabase() {
     conn.on("error", (err) => {
         console.error('Error en la conexión:', err);
         if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-            // Reconectamos automáticamente en caso de desconexión
+            // Reconectamos automáticamente a la BD en caso de desconexión
             console.log('Intentando reconectar a la base de datos...');
             connectToDatabase();
         } else {
@@ -338,7 +338,7 @@ router.get("/nombre", (req,res)=>{
 });
 
 //SubRuta para ver productos según la categoria y marca
-//localhost:3000/api/productos/marca/samsung
+//localhost:3000/api/productos/consulta?marca=samsung&categoria=celular
 //[Caso: req.query.<parameter> → query]
 //NOTA: Se requiere definir una ruta para conocer los "req.query.<parameter>"
 //En este caso "/consulta"
